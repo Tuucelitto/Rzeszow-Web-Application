@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # MongoDB Database Service
+  mongo:
+    image: mongo:latest
+    container_name: tugce-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  # Backend Service
+  backend:
+    build: ./backend
+    container_name: tugce-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/tugce-portfolio
+    depends_on:
+      - mongo
+
+  # Frontend Service
+  frontend:
+    build: ./frontend
+    container_name: tugce-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data: 
